@@ -14,7 +14,9 @@ NEWSPIDER_MODULE = "mySpider.spiders"
 
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.59"
+# USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.59"
+# USER_AGENT = "User-Agent:Mozilla/5.0 (Windows NT 6.2; WOW64; rv:21.0) Gecko/20100101 Firefox/21.0"
+USER_AGENT = "User-Agent:Opera/9.80 (Windows NT 6.1; WOW64; U; en) Presto/2.10.229 Version/11.62"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = False
@@ -91,3 +93,14 @@ DOWNLOAD_DELAY = 3
 REQUEST_FINGERPRINTER_IMPLEMENTATION = "2.7"
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
+
+# 不验证SSL证书
+# DOWNLOAD_HANDLERS_BASE = {
+#     'file': 'scrapy.core.downloader.handlers.file.FileDownloadHandler',
+#     'http': 'scrapy.core.downloader.handlers.http.HttpDownloadHandler',
+#     'https': 'scrapy.core.downloader.handlers.http.HttpDownloadHandler',
+#     's3': 'scrapy.core.downloader.handlers.s3.S3DownloadHandler',
+# }
+# DOWNLOAD_HANDLERS = {
+#     'https': 'mySpider.demo.downloader.handler.https.HttpsDownloaderIgnoreCNError',
+# }

@@ -7,7 +7,9 @@ class DemoSpider(scrapy.Spider):
     # start_urls = ["https://app.mi.com"]
     # allowed_domains = ["app.mi.com"]
     # start_urls = ["https://www.qidian.com/rank/hotsales?style=1"]
-    start_urls = ["https://www.quotes.toscrape.com/page/1/"]
+    # start_urls = ["https://www.quotes.toscrape.com/page/1/"]
+    start_urls = ["https://quotes.toscrape.com"] # 去掉www就不会报Remote certificate is not valid for hostname
+    # start_urls = ["https://quotes.toscrape.com/page/1"] # 去掉www就不会报Remote certificate is not valid for hostname
 
     demo_settings = {
         # 'DOWNLOAD_DELAY': 270,  # 下载延迟 270秒
@@ -20,7 +22,7 @@ class DemoSpider(scrapy.Spider):
             's3': 'scrapy.core.downloader.handlers.s3.S3DownloadHandler',
         },
         "DOWNLOAD_HANDLERS": {
-            'https': 'mySpider.demo.downloader.handler.https.HttpsDownloaderIgnoreCNError',
+            'https': 'mySpider.custom.downloader.handler.https.HttpsDownloaderIgnoreCNError',
         },
     }
 #//div[@class='quote']/span[@class='text']
@@ -53,13 +55,14 @@ class DemoSpider(scrapy.Spider):
         list = []
         for one_selector in list_selector:
             text = one_selector.xpath("./span[@class='text']/text()").get()
-            author = one_selector.xpath("./span/small/[@class='author']/text()").get()
+            author = one_selector.xpath("./span/small[@class='author']/text()").get()
             tags = one_selector.xpath("./div[@class='tags']/a/text()").getall()
-            yield {"text":text, "author":author, "tags":tags}
-        # next_url = response.xpath("//li[@class='next']/a/@href").get()
-        # print("next_url:"+next_url)
-        # if next_url is not None:
-        #     yield scrapy.Request("http://quotes.toscrape.com"+next_url)
+            yield {"text": text, "author": author, "tags": tags}
+        next_url = response.xpath("//li[@class='next']/a/@href").get()
+        # print("next_url:"+next_url) # 当next_url为空报错?
+        if next_url is not None:
+            print("next_url:" + next_url)
+            yield scrapy.Request("http://quotes.toscrape.com"+next_url)
 
 
 
@@ -70,7 +73,9 @@ class DemoSpider(scrapy.Spider):
 
 
 
-# 执行 scrapy crawl demo -o quotes1.json
+# 目录下执行 scrapy crawl demo -o quotes1.json
 # AttributeError: 'AsyncioSelectorReactor' object has no attribute '_handleSignals'
 # 安装兼容的 Twisted 版本
 # https://www.bytezonex.com/archives/htjVyKrE.html
+# scrapy 爬虫2小时入门（二）
+# https://www.bilibili.com/read/cv10015858/
