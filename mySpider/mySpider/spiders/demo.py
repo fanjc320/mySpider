@@ -11,20 +11,6 @@ class DemoSpider(scrapy.Spider):
     start_urls = ["https://quotes.toscrape.com"] # 去掉www就不会报Remote certificate is not valid for hostname
     # start_urls = ["https://quotes.toscrape.com/page/1"] # 去掉www就不会报Remote certificate is not valid for hostname
 
-    demo_settings = {
-        # 'DOWNLOAD_DELAY': 270,  # 下载延迟 270秒
-        # 'LOG_LEVEL': 'DEBUG',  # 打印日志等级
-        # 下面两个设置 关闭SSL证书验证
-        "DOWNLOAD_HANDLERS_BASE": {
-            'file': 'scrapy.core.downloader.handlers.file.FileDownloadHandler',
-            'http': 'scrapy.core.downloader.handlers.http.HttpDownloadHandler',
-            'https': 'scrapy.core.downloader.handlers.http.HttpDownloadHandler',
-            's3': 'scrapy.core.downloader.handlers.s3.S3DownloadHandler',
-        },
-        "DOWNLOAD_HANDLERS": {
-            'https': 'mySpider.custom.downloader.handler.https.HttpsDownloaderIgnoreCNError',
-        },
-    }
 #//div[@class='quote']/span[@class='text']
 #//div[@class='quote']//small[@class='author'] 或 //div[@class='quote']/span/small[@class='author']
 #////div[@class='quote']/div[@class='tags']/a
