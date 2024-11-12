@@ -1,5 +1,5 @@
 import scrapy
-
+from mySpider.items import MyspiderItem
 
 class DemoSpider(scrapy.Spider):
     name = "demo"
@@ -29,40 +29,21 @@ class DemoSpider(scrapy.Spider):
 #//div[@class='quote']//small[@class='author'] 或 //div[@class='quote']/span/small[@class='author']
 #////div[@class='quote']/div[@class='tags']/a
 
-    # def parse(self, response):
-    #     print("crawler start working ... ".center(88, '-'))
-    #     list_selector = response.xpath("//div[@class='book-mid-info'")
-    #     list = []
-    #     for one_selector in list_selector:
-    #         name = one_selector.xpath("h4/a/text()").extract()[0]
-    #         author = one_selector.xpath("p[1]/a[1]/text()").extract()[0]
-    #         type = one_selector.xpath("p[1]/a[2]/text()").extract()[0]
-    #         fr = one_selector.xpath("p[1]/span/text()").extract()[0]
-    #         hot_dict = {
-    #             "姓名": name,
-    #             "作者": author,
-    #             "类型": type,
-    #             "获取方式": fr
-    #         }
-    #         print(hot_dict)
-    #         list.append(hot_dict)
-    #     return list
-
-
     def parse(self, response):
         print("crawler start working ... ".center(88, '-'))
         list_selector = response.xpath("//div[@class='quote']")
         list = []
         for one_selector in list_selector:
-            text = one_selector.xpath("./span[@class='text']/text()").get()
-            author = one_selector.xpath("./span/small[@class='author']/text()").get()
-            tags = one_selector.xpath("./div[@class='tags']/a/text()").getall()
-            yield {"text": text, "author": author, "tags": tags}
+            item = MyspiderItem()
+            item['text'] = one_selector.xpath("./span[@class='text']/text()").get()
+            item['author'] = one_selector.xpath("./span/small[@class='author']/text()").get()
+            item['tags'] = one_selector.xpath("./div[@class='tags']/a/text()").getall()
+            yield item
         next_url = response.xpath("//li[@class='next']/a/@href").get()
         # print("next_url:"+next_url) # 当next_url为空报错?
         if next_url is not None:
             print("next_url:" + next_url)
-            yield scrapy.Request("http://quotes.toscrape.com"+next_url)
+            yield scrapy.Request("http://quotes.toscrape.com"+next_url, callback = self.parse)
 
 
 
